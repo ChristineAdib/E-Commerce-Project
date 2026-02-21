@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "bZjGAiEDEOk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\EG.LAP\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",
+    "C:\\Users\\EG.LAP\\.nuget\\packages\\mapster.core\\1.2.1\\mapster.core.1.2.1.nupkg.sha512"
+  ],
+  "logs": []
+}
