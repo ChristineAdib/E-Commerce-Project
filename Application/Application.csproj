@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\CategoryDTOs\" />
     <Folder Include="DTOs\CartDTOs\" />
     <Folder Include="DTOs\OrderDTOs\" />
     <Folder Include="DTOs\ProductDTOs\" />
     <Folder Include="DTOs\UserDTOs\" />
     <Folder Include="Interfaces\Services\" />
-    <Folder Include="Interfaces\Repository\" />
     <Folder Include="Mapper\" />
     <Folder Include="Services\" />
   </ItemGroup>

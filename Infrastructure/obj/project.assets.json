@@ -1284,6 +1284,9 @@
       "Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "10.0.3"
+        },
         "compile": {
           "bin/placeholder/Domain.dll": {}
         },
@@ -3737,29 +3740,25 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "Application >= 1.0.0",
+      "Microsoft.EntityFrameworkCore >= 10.0.3",
       "Microsoft.EntityFrameworkCore.SqlServer >= 10.0.3",
       "Microsoft.EntityFrameworkCore.Tools >= 10.0.3"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\EG.LAP\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Dell ETC\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Infrastructure\\Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj",
       "projectName": "Infrastructure",
-      "projectPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Infrastructure\\Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\EG.LAP\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Infrastructure\\obj\\",
+      "projectPath": "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\Dell ETC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\EG.LAP\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Dell ETC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3773,8 +3772,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\Application.csproj": {
-              "projectPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\Application.csproj"
+            "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Application\\Application.csproj": {
+              "projectPath": "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Application\\Application.csproj"
             }
           }
         }
@@ -3795,6 +3794,10 @@
       "net10.0": {
         "targetAlias": "net10.0",
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[10.0.3, )"
+          },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
             "version": "[10.0.3, )"
@@ -3822,7 +3825,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
