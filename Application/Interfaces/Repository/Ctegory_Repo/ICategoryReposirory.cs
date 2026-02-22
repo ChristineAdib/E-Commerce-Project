@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Interfaces.Repository
+namespace Application.Interfaces.Repository.Ctegory_Repo
 {
     public interface ICategoryReposirory
     {

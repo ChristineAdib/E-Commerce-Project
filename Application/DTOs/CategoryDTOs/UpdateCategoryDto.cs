@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Interfaces.Services
+namespace Application.DTOs.CategoryDTOs
 {
-    internal class ICategoryService
+    internal class UpdateCategoryDto
     {
     }
 }

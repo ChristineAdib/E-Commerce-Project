@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Repository;
+﻿using Application.Interfaces.Repository.Ctegory_Repo;
 using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Data;
