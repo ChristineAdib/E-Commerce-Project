@@ -4,7 +4,10 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    internal class OrderStatus
+    public enum OrderStatus
     {
+        Processing = 0,
+        Shipped=1,
+        Delivered=2
     }
 }
