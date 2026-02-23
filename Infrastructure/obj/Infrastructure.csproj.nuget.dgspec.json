@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj": {}
+    "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Infrastructure\\Infrastructure.csproj": {}
   },
   "projects": {
-    "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Application\\Application.csproj": {
+    "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\Khaled\\.nuget\\packages\\",
-        "outputPath": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Application\\obj\\",
+        "projectPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\EG.LAP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Khaled\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EG.LAP\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,8 +32,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Domain\\Domain.csproj": {
-                "projectPath": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Domain\\Domain.csproj"
+              "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Domain\\Domain.csproj"
               }
             }
           }
@@ -75,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -353,20 +353,20 @@
         }
       }
     },
-    "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Domain\\Domain.csproj": {
+    "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\Khaled\\.nuget\\packages\\",
-        "outputPath": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Domain\\obj\\",
+        "projectPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\EG.LAP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Khaled\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EG.LAP\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -420,7 +420,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -698,20 +698,20 @@
         }
       }
     },
-    "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj": {
+    "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Khaled\\.nuget\\packages\\",
-        "outputPath": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Infrastructure\\Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\EG.LAP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Khaled\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EG.LAP\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -726,8 +726,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Application\\Application.csproj": {
-                "projectPath": "S:\\Senior Year\\ITI\\.Net\\C#\\FinalProject\\E-Commerce-Project\\Application\\Application.csproj"
+              "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\EG.LAP\\source\\repos\\E-CommerceProject\\Application\\Application.csproj"
               }
             }
           }
@@ -779,7 +779,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

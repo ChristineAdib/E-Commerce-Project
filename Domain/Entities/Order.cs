@@ -8,6 +8,7 @@ namespace Domain.Entities
     {
         public int Id { set; get; }
         public int UserId { set; get; }
+        public User User { get; set; }
         public DateTime OrderDate { set; get; }
         public OrderStatus Status { set; get; }
         public decimal TotalAmount { set; get; }
