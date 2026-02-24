@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "3rl9mfhc724=",
-  "success": false,
+  "dgSpecHash": "KT39NfKkLAA=",
+  "success": true,
   "projectFilePath": "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dell ETC\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\Dell ETC\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
     "C:\\Users\\Dell ETC\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\Dell ETC\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",
+    "C:\\Users\\Dell ETC\\.nuget\\packages\\mapster.core\\1.2.1\\mapster.core.1.2.1.nupkg.sha512",
     "C:\\Users\\Dell ETC\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
     "C:\\Users\\Dell ETC\\.nuget\\packages\\microsoft.bcl.cryptography\\9.0.4\\microsoft.bcl.cryptography.9.0.4.nupkg.sha512",
     "C:\\Users\\Dell ETC\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",
@@ -62,17 +64,5 @@
     "C:\\Users\\Dell ETC\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "C:\\Users\\Dell ETC\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.4\\system.security.cryptography.protecteddata.9.0.4.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1105",
-      "level": "Error",
-      "message": "Unable to find project information for 'C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Application\\Application.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
-      "projectPath": "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj",
-      "filePath": "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Infrastructure\\Infrastructure.csproj",
-      "libraryId": "C:\\Users\\Dell ETC\\Desktop\\c#project\\E-Commerce-Project\\Application\\Application.csproj",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }
