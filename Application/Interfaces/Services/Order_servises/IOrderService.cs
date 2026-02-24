@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repository.Order_Repo;
+﻿using Application.DTOs.OrderDTOs;
+using Application.Interfaces.Repository.Order_Repo;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,14 @@ namespace Application.Interfaces.Services.Order_servises
 {
     public interface IOrderService
     {
-        Task<Order?> GetOrderByIdAsync(int id);
-        Task<Order?> GetOrderWithItemsAsync(int id);
-        Task<List<Order>> GetOrdersByUserAsync(int userId);
-        Task<List<Order>> GetOrdersByStatusAsync(OrderStatus status);
-        Task CreateOrderAsync(Order order);
-
-
+        Task<OrderDto?> GetOrderByIdAsync(int id);
+        Task<OrderDto?> GetOrderWithItemsAsync(int id);
+        Task<List<OrderDto>> GetOrdersByUserAsync(int userId);
+        Task<List<OrderDto>> GetOrdersByStatusAsync(OrderStatus status);
+        Task<OrderDto> CreateOrderAsync(CreateOrderDto dto);
     }
+
+
+}
     
 }
