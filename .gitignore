@@ -59,4 +59,10 @@ ehthumbs.db
 Desktop.ini
 
 # Fody - auto-generated XML schema
+# Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
