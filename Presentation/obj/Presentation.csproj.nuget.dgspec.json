@@ -1097,6 +1097,10 @@
             "Autofac.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[10.0.0, )"
+            },
+            "Microsoft.Web.WebView2": {
+              "target": "Package",
+              "version": "[1.0.3800.47, )"
             }
           },
           "imports": [
