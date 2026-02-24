@@ -1,12 +1,11 @@
-﻿using Application.Interfaces.Repository.Product_Repo;
+﻿using Application.DTOs.ProductDTOs;
+using Application.Interfaces.Repository.Product_Repo;
+using Application.Interfaces.Services.Product_services;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Services
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
         private readonly IProductRepository _repo;
 
@@ -15,24 +14,93 @@ namespace Application.Services
             _repo = repo;
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public async Task<IEnumerable<GetProductDto>> GetAllProductsAsync()
         {
-            return _repo.Get_all_products().ToList();
+            var products = await _repo.GetAllAsync();
+
+            if (!products.Any())
+                throw new Exception("No products found");
+
+            return products.Select(p => new GetProductDto
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                ImageUrl = p.ImageUrl,
+                CategoryName = p.Category?.CategoryName
+            });
+        }
+        public async Task<GetProductDto> GetProductByIdAsync(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentException("Invalid product id");
+
+            var product = await _repo.GetByIdAsync(id);
+
+            if (product == null)
+                throw new Exception("Product not found");
+
+            return new GetProductDto
+            {
+                Id = product.Id,
+                ProductName = product.ProductName,
+                Price = product.Price,
+                ImageUrl = product.ImageUrl,
+                CategoryName = product.Category?.CategoryName
+            };
         }
 
-        public void CreateProduct(Product product)
+        public async Task CreateProductAsync(CreateProductDto dto)
         {
-            _repo.Add_Product(product);
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            if (string.IsNullOrWhiteSpace(dto.ProductName))
+                throw new ArgumentException("Product name is required");
+
+            if (dto.Price <= 0)
+                throw new ArgumentException("Price must be greater than zero");
+
+            if (dto.CategoryID <= 0)
+                throw new ArgumentException("Invalid category");
+
+            var product = new Product
+            {
+                ProductName = dto.ProductName.Trim(),
+                Price = dto.Price,
+                ImageUrl = dto.ImageUrl,
+                CategoryID = dto.CategoryID
+            };
+
+            await _repo.AddAsync(product);
         }
 
-        public void UpdateProduct(Product product)
+        public async Task UpdateProductAsync(UpdateProductDto dto)
         {
-            _repo.Update_Product(product);
+            var existing = await _repo.GetByIdAsync(dto.Id);
+
+            if (existing == null)
+                throw new Exception("Product not found");
+
+            if (dto.Price <= 0)
+                throw new Exception("Invalid price");
+
+            existing.ProductName = dto.ProductName;
+            existing.Price = dto.Price;
+            existing.ImageUrl = dto.ImageUrl;
+            existing.CategoryID = dto.CategoryID;
+
+            await _repo.UpdateAsync(existing);
         }
 
-        public void DeleteProduct(Product product)
+        public async Task DeleteProductAsync(int productId)
         {
-            _repo.Delete_Product(product);
+            var existing = await _repo.GetByIdAsync(productId);
+
+            if (existing == null)
+                throw new Exception("Product not found");
+
+            await _repo.DeleteAsync(existing);
         }
     }
 }
