@@ -3,3 +3,14 @@ obj/
 bin/
 .json/
 out/
+
+# Visual Studio
+.vs/
+
+# Build folders
+bin/
+obj/
+
+# User files
+*.user
+*.suo
