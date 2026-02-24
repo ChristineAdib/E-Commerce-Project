@@ -1,13 +1,14 @@
 ﻿using Application.Interfaces.Repository.Product_Repo;
 using Domain.Entities;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Infrastructure.Repositories
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -16,27 +17,36 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public IQueryable<Product> Get_all_products()
+        public async Task<List<Product>> GetAllAsync()
         {
-            return _context.Products;
+            return await _context.Products
+                                 .Include(p => p.Category)
+                                 .ToListAsync();
         }
 
-        public void Add_Product(Product product)
+        public async Task<Product?> GetByIdAsync(int id)
         {
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            return await _context.Products
+                                 .Include(p => p.Category)
+                                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public void Update_Product(Product product)
+        public async Task AddAsync(Product product)
+        {
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Product product)
         {
             _context.Products.Update(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete_Product(Product product)
+        public async Task DeleteAsync(Product product)
         {
             _context.Products.Remove(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
