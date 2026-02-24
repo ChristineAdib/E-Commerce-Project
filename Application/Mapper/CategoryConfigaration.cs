@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.DTOs.CategoryDTOs
+namespace Application.Mapper
 {
-    internal class UpdateCategoryDto
+    internal class CategoryConfigaration
     {
     }
 }

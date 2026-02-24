@@ -10,11 +10,7 @@
     <Folder Include="DTOs\CartDTOs\" />
     <Folder Include="DTOs\OrderDTOs\" />
     <Folder Include="DTOs\UserDTOs\" />
-
-    <Folder Include="Services\" />
-
     <Folder Include="Mapper\" />
-
   </ItemGroup>
 
   <ItemGroup>
