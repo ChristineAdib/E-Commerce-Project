@@ -7,13 +7,15 @@ namespace Application.Interfaces.Repository.Product_Repo
 {
     public interface IProductRepository
     {
-        IQueryable<Product> Get_all_products();
+        Task<List<Product>> GetAllAsync();
 
-        void Add_Product(Product product);
+        Task<Product?> GetByIdAsync(int id);
 
-        void Update_Product(Product product);
+        Task AddAsync(Product product);
 
-        void Delete_Product(Product product);
+        Task UpdateAsync(Product product);
+
+        Task DeleteAsync(Product product);
     }
 
 }

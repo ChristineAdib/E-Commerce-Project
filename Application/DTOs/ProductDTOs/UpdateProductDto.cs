@@ -6,7 +6,7 @@ namespace Application.DTOs.ProductDTOs
 {
     public class UpdateProductDto
     {
-        public int ProductID { get; set; }
+        public int Id { get; set; }
 
         public string ProductName { get; set; }
 
