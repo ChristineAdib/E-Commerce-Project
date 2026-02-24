@@ -13,7 +13,7 @@ namespace Infrastructure.Configuration
         {
             builder.ToTable("Categories");
 
-            builder.HasKey(c => c.CategoryID);
+            builder.HasKey(c => c.Id);
             builder.Property(c => c.CategoryName)
                 .IsRequired()
                 .HasMaxLength(100);
