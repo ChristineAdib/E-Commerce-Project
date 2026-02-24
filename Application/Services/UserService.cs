@@ -21,9 +21,9 @@ namespace Application.Services
             _cartRepo = cartRepository;
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var user = _userRepository.GetUserById(id);
+            var user = await _userRepository.GetUserByIdAsync(id);
             if (user == null)
                 Console.WriteLine("This user not found.");
             _userRepository.Delete(id);

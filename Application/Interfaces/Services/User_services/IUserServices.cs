@@ -8,12 +8,12 @@ namespace Application.Interfaces.Services.User_services
 {
     public interface IUserServices
     {
-        public GetUserDto GetUserById(int id);
-        public List<GetUserDto> GetAllUsers();
-        public void Register(AddUserDto user);
+        public Task<GetUserDto> GetUserByIdAsync(int id);
+        public Task<List<GetUserDto>> GetAllUsers();
+        public Task Register(AddUserDto user);
         public void Update(UpdataUserDto user);
-        public void Delete(int id);
-        public GetUserDto GetUserByEmail(string Email);
-        public GetUserDto Login(string username, string password);
+        public void DeleteAsync(int id);
+        public Task<GetUserDto> GetUserByEmailAsync(string Email);
+        public Task<GetUserDto> Login(string username, string password);
     }
 }
