@@ -4,10 +4,8 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    public class Product
+    public class Product:BaseEntity
     {
-        public int ProductID { get; set; }
-
         public string ProductName { get; set; }
 
         public decimal Price { get; set; }
@@ -21,5 +19,6 @@ namespace Domain.Entities
 
         // Navigation
         public Category Category { get; set; }
+        public List<CartItem> cartItems { get; set; }
     }
 }

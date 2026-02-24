@@ -11,7 +11,7 @@ namespace Infrastructure.Configuration
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Product> builder)
         {
             builder.ToTable("Products");
-            builder.HasKey(p => p.ProductID);
+            builder.HasKey(p => p.Id);
             builder.Property(p => p.ProductName)
                 .IsRequired()
                 .HasMaxLength(200);
