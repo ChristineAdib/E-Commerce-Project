@@ -1,16 +1,10 @@
-﻿using Application.DTOs.CategoryDTOs;
-using Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Application.Interfaces.Services.Category_servises
 {
-    public interface ICategoryService
+    internal class ICategoryService
     {
-        List<Category> GetAll();
-        void AddCategory(CreateCategoryDto categoryDto); 
-        void UpdateCategory(UpdateCategoryDto categoryDto); 
-        void DeleteCategory(int id);
     }
 }
