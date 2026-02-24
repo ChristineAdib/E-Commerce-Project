@@ -41,8 +41,8 @@ namespace Application.Services
                 if (product == null)
                     throw new Exception($"Product with Id {item.ProductId} not found");
 
-                if (product.StockQuantity < item.Quantity)
-                    throw new Exception($"Not enough Stock for product {product.ProductName}");
+                //if (product.StockQuantity < item.Quantity)
+                //    throw new Exception($"Not enough Stock for product {product.ProductName}");
 
                 var subTotal = product.Price * item.Quantity;
                 var orderItem = new OrderItem
@@ -52,7 +52,7 @@ namespace Application.Services
                     Price = product.Price,
                     SubTotal = subTotal
                 };
-                product.StockQuantity -= item.Quantity;
+                //product.StockQuantity -= item.Quantity;
                 order.OrderItems.Add(orderItem);
                 totalAmount += subTotal;
             }
@@ -77,6 +77,30 @@ namespace Application.Services
                 }).ToList()
             };
 
+        }
+
+        public async Task<OrderDto> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
+        {
+            var order = await _orderRepository.GetByIdWithItemsAsync(orderId);
+
+            if (order == null)
+                throw new Exception("Order not found.");
+
+            if (order.Status == OrderStatus.Delivered)
+                throw new Exception("Delivered orders cannot be modified.");
+
+            if (order.Status == OrderStatus.Cancelled)
+                throw new Exception("Cancelled orders cannot be modified.");
+
+            // منع الرجوع لورا في الفلو
+            if ((int)newStatus < (int)order.Status)
+                throw new Exception("Invalid status transition.");
+
+            order.Status = newStatus;
+
+            await _orderRepository.SaveChangesAsync();
+
+            return MapToDto(order);
         }
 
 

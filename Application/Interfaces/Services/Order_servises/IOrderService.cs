@@ -14,6 +14,7 @@ namespace Application.Interfaces.Services.Order_servises
         Task<List<OrderDto>> GetOrdersByUserAsync(int userId);
         Task<List<OrderDto>> GetOrdersByStatusAsync(OrderStatus status);
         Task<OrderDto> CreateOrderAsync(CreateOrderDto dto);
+        Task<OrderDto> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus);
     }
 
 
