@@ -40,8 +40,10 @@ namespace Application.Services
                 var product = await _productRepository.GetByIdAsync(item.ProductId);
                 if (product == null)
                     throw new Exception($"Product with Id {item.ProductId} not found");
+
                 if (product.StockQuantity < item.Quantity)
-                    throw new Exception($"Not enough Stock for product {product.Name}");
+                    throw new Exception($"Not enough Stock for product {product.ProductName}");
+
                 var subTotal = product.Price * item.Quantity;
                 var orderItem = new OrderItem
                 {
