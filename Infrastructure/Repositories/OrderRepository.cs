@@ -35,7 +35,7 @@ namespace Infrastructure.Repositories
         public async Task<Order?> GetByIdWithItemsAsync(int id)
         {
             return await _context.Orders
-                                   .AsNoTracking()
+                                  
                                   .Include(o => o.OrderItems)
                                   .FirstOrDefaultAsync(o => o.Id == id);
         }

@@ -106,7 +106,7 @@ namespace Application.Services
 
         async Task<OrderDto?> IOrderService.GetOrderByIdAsync(int id)
         {
-            var order = await _orderRepository.GetByIdAsync(id);
+            var order = await _orderRepository.GetByIdWithItemsAsync(id);
             if (order == null) return null;
 
             return MapToDto(order);
