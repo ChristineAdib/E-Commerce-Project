@@ -2,5 +2,5 @@
   <Project Path="Application/Application.csproj" />
   <Project Path="Domain/Domain.csproj" />
   <Project Path="Infrastructure/Infrastructure.csproj" />
-  <Project Path="Presentation/Presentation.csproj" />
+  <Project Path="Presentation/Presentation.csproj" Id="e15f7cc0-477e-457e-9f18-04efe1eeedcd" />
 </Solution>

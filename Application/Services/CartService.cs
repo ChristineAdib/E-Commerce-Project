@@ -32,7 +32,7 @@ namespace Application.Services
             if (quantity <= 0)
                 throw new Exception("Quantity must be greater than zero");
 
-            var product = await _productRepo.GetByIdAsync(userId);
+            var product = await _productRepo.GetByIdAsync(productId);
             if (product == null)
                 throw new Exception("Product not found");
 
@@ -41,7 +41,10 @@ namespace Application.Services
 
             var cart = await _cartRepo.GetCartByUserIdAsync(userId);
             if (cart == null)
-                throw new Exception("Cart not found");
+            {
+                cart = new Cart { UserId = userId };
+                await _cartRepo.AddAsync(cart);
+            }
 
             var existingItem = await _cartItemRepo.GetByCartAndProductAsync(cart.Id, productId);
             int total = quantity;
@@ -125,6 +128,9 @@ namespace Application.Services
             }
 
             var product = await _productRepo.GetByIdAsync(productId);
+
+            if (product == null)
+                throw new Exception("Product not found");
 
             if (quantity > product.StockQuantity)
                 throw new Exception("Quantity exceeds stock");

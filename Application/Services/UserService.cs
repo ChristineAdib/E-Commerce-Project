@@ -39,8 +39,10 @@ namespace Application.Services
             {
                 var user=new GetUserDto()
                 {
+                    Id = u.Id,
                     UserName = u.UserName,
-                    Email = u.Email
+                    Email = u.Email,
+                    IsAdmin = u.IsAdmin
                 };
                 userDtos.Add(user);
             }
@@ -53,7 +55,7 @@ namespace Application.Services
             if (user == null)
                 return null;
 
-            var userDto = new GetUserDto() { UserName = user.UserName, Email = user.Email };
+            var userDto = new GetUserDto() { Id = user.Id, UserName = user.UserName, Email = user.Email, IsAdmin = user.IsAdmin };
             return userDto;
         }
 
@@ -63,7 +65,7 @@ namespace Application.Services
             if (user == null)
                 return null;
 
-            var userDto = new GetUserDto() { UserName = user.UserName, Email = user.Email };
+            var userDto = new GetUserDto() { Id = user.Id, UserName = user.UserName, Email = user.Email, IsAdmin = user.IsAdmin };
             return userDto;
         }
 
@@ -84,7 +86,7 @@ namespace Application.Services
 
             _userRepository.Login(username, password);
 
-            var userDto = new GetUserDto() { UserName = user.UserName, Email = user.Email };
+            var userDto = new GetUserDto() { Id = user.Id, UserName = user.UserName, Email = user.Email, IsAdmin = user.IsAdmin };
             return userDto;
         }
 

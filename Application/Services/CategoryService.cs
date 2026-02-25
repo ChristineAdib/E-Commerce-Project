@@ -25,6 +25,7 @@ namespace Application.Services
             {
                 var category = new GetCategoryDto()
                 {
+                    Id = c.Id,
                     CategoryName = c.CategoryName,
                     Description=c.CategoryDescription
                 };
@@ -78,7 +79,7 @@ namespace Application.Services
             }
 
             var categoryEntity = category.Adapt<Category>();
-            _categoryRepository.add_Category(categoryEntity);
+            _categoryRepository.Update_Category(categoryEntity);
         }
 
         public void DeleteCategory(int id)

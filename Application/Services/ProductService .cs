@@ -27,7 +27,9 @@ namespace Application.Services
                 ProductName = p.ProductName,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl,
-                CategoryName = p.Category?.CategoryName
+                CategoryName = p.Category?.CategoryName,
+                Description = p.Description,
+                StockQuantity = p.StockQuantity
             });
         }
         public async Task<GetProductDto> GetProductByIdAsync(int id)
@@ -46,7 +48,9 @@ namespace Application.Services
                 ProductName = product.ProductName,
                 Price = product.Price,
                 ImageUrl = product.ImageUrl,
-                CategoryName = product.Category?.CategoryName
+                CategoryName = product.Category?.CategoryName,
+                Description = product.Description,
+                StockQuantity = product.StockQuantity
             };
         }
 
@@ -69,7 +73,9 @@ namespace Application.Services
                 ProductName = dto.ProductName.Trim(),
                 Price = dto.Price,
                 ImageUrl = dto.ImageUrl,
-                CategoryID = dto.CategoryID
+                CategoryID = dto.CategoryID,
+                Description = dto.Description,
+                StockQuantity = dto.StockQuantity
             };
 
             await _repo.AddAsync(product);
@@ -89,6 +95,8 @@ namespace Application.Services
             existing.Price = dto.Price;
             existing.ImageUrl = dto.ImageUrl;
             existing.CategoryID = dto.CategoryID;
+            existing.Description = dto.Description;
+            existing.StockQuantity = dto.StockQuantity;
 
             await _repo.UpdateAsync(existing);
         }
