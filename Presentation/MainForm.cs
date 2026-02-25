@@ -14,6 +14,12 @@ using System.IO;
 using Domain.Entities;
 using Application.Interfaces.Services.Category_servises;
 using Application.Interfaces.Repository.Ctegory_Repo;
+using Application.Interfaces.Services.Cart_services;
+using Application.Interfaces.Repository.Cart_Repo;
+using Application.Interfaces.Repository.Product_Repo;
+using Application.Interfaces.Repository.User_Repo;
+using Application.Interfaces.Services.User_services;
+using Application.DTOs.UserDTOs;
 
 namespace Presentation
 {
@@ -22,7 +28,14 @@ namespace Presentation
         private WebView2 webView;
         private readonly ProductService _productService;
         private readonly ICategoryService _categoryService;
+        private readonly ICartRepository _cartRepo;
+        private readonly IUserServices _userService;
+        private readonly ICartServices _cartService;
         private bool _isNavigationComplete = false;
+        
+        // Session Management
+        private int? _currentUserId = null;
+        private bool _isAdmin = false;
 
         public MainForm()
         {
@@ -35,6 +48,12 @@ namespace Presentation
             
             var categoryRepo = new Infrastructure.Repositories.CategoryRepository(context);
             _categoryService = new CategoryService(categoryRepo);
+
+            _cartRepo = new Infrastructure.Repositories.CartRepository(context);
+            var cartItemRepo = new Infrastructure.Repositories.CartItemRepository(context);
+            var userRepo = new Infrastructure.Repositories.UserRepository(context);
+            _cartService = new CartService(_cartRepo, cartItemRepo, userRepo, repo);
+            _userService = new UserService(userRepo, _cartRepo);
 
             InitializeWebView();
         }
@@ -50,11 +69,12 @@ namespace Presentation
             await webView.EnsureCoreWebView2Async(null);
             
             webView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+            webView.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
             webView.CoreWebView2.NavigationCompleted += (s, e) => _isNavigationComplete = true;
             
             // Set up path to local HTML files
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            string htmlPath = Path.Combine(baseDir, "WebUI", "products.html");
+            string htmlPath = Path.Combine(baseDir, "WebUI", "login.html");
             
             if (!File.Exists(htmlPath))
             {
@@ -65,7 +85,7 @@ namespace Presentation
                 }
                 if (current != null)
                 {
-                    htmlPath = Path.Combine(current, "WebUI", "products.html");
+                    htmlPath = Path.Combine(current, "WebUI", "login.html");
                 }
             }
 
@@ -147,6 +167,96 @@ namespace Presentation
                         string categoriesJson = JsonSerializer.Serialize(categoryList);
                         webView.CoreWebView2.ExecuteScriptAsync($"window.receiveCategories && window.receiveCategories({categoriesJson});");
                         break;
+
+                    case "GET_CART":
+                        if (_currentUserId == null) return;
+                        await SendUpdatedCartToFrontend();
+                        break;
+
+                    case "ADD_TO_CART":
+                        if (_currentUserId == null || _isAdmin) return;
+                        if (message.Data is JsonElement addElement)
+                        {
+                            var productId = addElement.GetProperty("productId").GetInt32();
+                            var quantity = addElement.GetProperty("quantity").GetInt32();
+                            await _cartService.AddToCartAsync(_currentUserId.Value, productId, quantity);
+                            await SendUpdatedCartToFrontend();
+                        }
+                        break;
+
+                    case "UPDATE_CART_ITEM":
+                        if (_currentUserId == null || _isAdmin) return;
+                        if (message.Data is JsonElement updateElement)
+                        {
+                            var productId = updateElement.GetProperty("productId").GetInt32();
+                            var quantity = updateElement.GetProperty("quantity").GetInt32();
+                            await _cartService.UpdateQuantityAsync(_currentUserId.Value, productId, quantity);
+                            await SendUpdatedCartToFrontend();
+                        }
+                        break;
+
+                    case "REMOVE_FROM_CART":
+                        if (_currentUserId == null || _isAdmin) return;
+                        if (message.Data is JsonElement removeElement)
+                        {
+                            var productId = removeElement.GetProperty("productId").GetInt32();
+                            await _cartService.RemoveFromCartAsync(_currentUserId.Value, productId);
+                            await SendUpdatedCartToFrontend();
+                        }
+                        break;
+
+                    case "PLACE_ORDER":
+                        if (_currentUserId == null || _isAdmin) return;
+                        await _cartService.ClearCartAsync(_currentUserId.Value);
+                        await SendUpdatedCartToFrontend();
+                        break;
+
+                    case "LOGIN":
+                        if (message.Data is JsonElement loginEl)
+                        {
+                            var loginData = JsonSerializer.Deserialize<Dictionary<string, string>>(loginEl.GetRawText());
+                            if (loginData != null && loginData.TryGetValue("username", out var userN) && loginData.TryGetValue("password", out var pass))
+                            {
+                                var user = await _userService.Login(userN, pass);
+                                if (user != null)
+                                {
+                                    _currentUserId = user.Id;
+                                    _isAdmin = user.IsAdmin;
+                                    string target = _isAdmin ? "admin.html" : "products.html";
+                                    NavigateTo(target);
+                                }
+                                else
+                                {
+                                    SendToJS("LOGIN_ERROR", new { Message = "Invalid username or password" });
+                                }
+                            }
+                        }
+                        break;
+
+                    case "REGISTER":
+                        if (message.Data is JsonElement regEl)
+                        {
+                            var regDto = JsonSerializer.Deserialize<AddUserDto>(regEl.GetRawText(), jsonOptions);
+                            if (regDto != null)
+                            {
+                                await _userService.Register(regDto);
+                                // Auto login
+                                var user = await _userService.Login(regDto.UserName, regDto.Password);
+                                if (user != null)
+                                {
+                                    _currentUserId = user.Id;
+                                    _isAdmin = user.IsAdmin;
+                                    NavigateTo("products.html");
+                                }
+                            }
+                        }
+                        break;
+
+                    case "LOGOUT":
+                        _currentUserId = null;
+                        _isAdmin = false;
+                        NavigateTo("login.html");
+                        break;
                 }
             }
             catch (Exception ex)
@@ -159,7 +269,70 @@ namespace Presentation
         {
             var response = new { Type = type, Data = data };
             string json = JsonSerializer.Serialize(response);
-            webView.ExecuteScriptAsync($"if (window.onMessageReceived) window.onMessageReceived({json});");
+            if (webView.CoreWebView2 != null)
+            {
+                webView.CoreWebView2.ExecuteScriptAsync($"if (window.onMessageReceived) window.onMessageReceived({json});");
+            }
+        }
+
+        private void NavigateTo(string pageName)
+        {
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string htmlPath = Path.Combine(baseDir, "WebUI", pageName);
+
+            if (!File.Exists(htmlPath))
+            {
+                string? current = baseDir;
+                while (current != null && !Directory.Exists(Path.Combine(current, "WebUI")))
+                {
+                    current = Directory.GetParent(current)?.FullName;
+                }
+                if (current != null)
+                {
+                    htmlPath = Path.Combine(current, "WebUI", pageName);
+                }
+            }
+
+            if (File.Exists(htmlPath))
+            {
+                webView.CoreWebView2.Navigate(new Uri(htmlPath).ToString());
+            }
+        }
+
+        private void CoreWebView2_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            string uri = e.Uri.ToLower();
+            
+            // Allow login and register always
+            if (uri.Contains("login.html") || uri.Contains("register.html")) return;
+
+            // Security: Not logged in
+            if (_currentUserId == null)
+            {
+                e.Cancel = true;
+                NavigateTo("login.html");
+                return;
+            }
+
+            // Role Security
+            if (_isAdmin)
+            {
+                // Admin trying to open customer pages
+                if (uri.Contains("cart.html") || uri.Contains("checkout.html"))
+                {
+                    e.Cancel = true;
+                    NavigateTo("admin.html");
+                }
+            }
+            else
+            {
+                // Customer trying to open admin pages
+                if (uri.Contains("admin.html") || uri.Contains("admin-product-form.html"))
+                {
+                    e.Cancel = true;
+                    NavigateTo("products.html");
+                }
+            }
         }
 
         private string HandlePickImage()
@@ -214,6 +387,41 @@ namespace Presentation
                 }
             }
             return null;
+        }
+
+        private async Task SendUpdatedCartToFrontend()
+        {
+            try
+            {
+                if (_currentUserId == null) return;
+                var cart = await _cartRepo.GetCartByUserIdAsync(_currentUserId.Value);
+                if (cart == null) return;
+
+                var items = cart.CartItems ?? new List<CartItem>();
+                var projectedItems = items.Select(item => new
+                {
+                    productId = item.ProductId,
+                    name = item.Product?.ProductName ?? "Unknown Product",
+                    price = item.Product?.Price ?? 0,
+                    quantity = item.Quantity,
+                    imageUrl = item.Product?.ImageUrl,
+                    subtotal = (item.Product?.Price ?? 0) * item.Quantity
+                }).ToList();
+
+                var response = new
+                {
+                    items = projectedItems,
+                    totalQuantity = projectedItems.Count,
+                    totalPrice = items.Sum(item => (item.Product?.Price ?? 0) * item.Quantity)
+                };
+
+                string json = JsonSerializer.Serialize(response);
+                await webView.CoreWebView2.ExecuteScriptAsync($"if (window.receiveCart) window.receiveCart({json});");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending cart to JS: {ex.Message}");
+            }
         }
     }
 

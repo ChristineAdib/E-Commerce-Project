@@ -39,11 +39,19 @@
                     <h1 class="text-xl font-bold">ShopClean</h1>
                 </a>
             </div>
-            <nav class="flex gap-6">
+            <nav class="flex gap-6 items-center">
                 <a href="products.html"
                     class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors font-medium">Products</a>
-                <a href="admin.html"
-                    class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors font-medium">Admin</a>
+                <a href="cart.html" class="relative group">
+                    <span
+                        class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors">shopping_cart</span>
+                    <span id="cart-badge"
+                        class="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center hidden">0</span>
+                </a>
+                <button onclick="logout()"
+                    class="text-slate-600 dark:text-slate-400 hover:text-red-500 transition-colors font-medium flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                </button>
             </nav>
         </div>
     </header>
@@ -65,11 +73,57 @@
             }
         }
 
+        function logout() {
+            sendMessage("LOGOUT", null);
+        }
+
+        function addToCart(productId) {
+            sendMessage("ADD_TO_CART", { productId: productId, quantity: 1 });
+            // Visual feedback
+            const btn = document.getElementById('add-to-cart-btn');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> ADDED!';
+            btn.classList.replace('bg-primary', 'bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.classList.replace('bg-green-600', 'bg-primary');
+            }, 2000);
+        }
+
+        window.receiveCart = function (cart) {
+            const badge = document.getElementById('cart-badge');
+            if (badge && cart.totalQuantity > 0) {
+                badge.textContent = cart.totalQuantity;
+                badge.classList.remove('hidden');
+            } else if (badge) {
+                badge.classList.add('hidden');
+            }
+        };
+
         window.onMessageReceived = function (response) {
             if (response.Type === "RECEIVE_PRODUCT_DETAILS") {
                 renderDetails(response.Data);
+            } else if (response.Type === "ERROR") {
+                showToast(response.Data.Message, "error");
             }
         };
+
+        function showToast(message, type = "success") {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-8 right-8 px-6 py-4 rounded-2xl shadow-2xl transition-all transform translate-y-20 z-[100] font-bold text-sm ${type === 'error' ? 'bg-red-500 text-white' : 'bg-green-600 text-white'
+                }`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            // Trigger animation
+            setTimeout(() => toast.classList.remove('translate-y-20'), 10);
+
+            // Auto hide
+            setTimeout(() => {
+                toast.classList.add('translate-y-20');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
 
         function renderDetails(product) {
             const container = document.getElementById('product-container');
@@ -119,20 +173,10 @@
                                 <span class="material-symbols-outlined text-primary">inventory_2</span>
                                 <span>Stock: ${product.StockQuantity} units available</span>
                             </div>
-                            <ul class="grid grid-cols-1 gap-4">
-                                <li class="flex items-center gap-3 text-sm">
-                                    <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                                    <span class="font-medium">Premium build quality</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm">
-                                    <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
-                                    <span class="font-medium">Certified by industry experts</span>
-                                </li>
-                            </ul>
                         </div>
                         
                         <div class="flex flex-wrap gap-4">
-                            <button class="bg-primary text-white font-black px-10 py-5 rounded-[1.25rem] hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl shadow-blue-500/40 flex items-center justify-center gap-3 text-sm uppercase tracking-widest">
+                            <button id="add-to-cart-btn" onclick="addToCart(${product.Id})" class="bg-primary text-white font-black px-10 py-5 rounded-[1.25rem] hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl shadow-blue-500/40 flex items-center justify-center gap-3 text-sm uppercase tracking-widest">
                                 <span class="material-symbols-outlined">shopping_basket</span>
                                 ADD TO CART
                             </button>
@@ -149,15 +193,6 @@
                                 <div class="flex flex-col">
                                     <span class="text-sm font-bold">Free Shipping</span>
                                     <span class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">On orders over $100</span>
-                                </div>
-                            </div>
-                             <div class="flex items-center gap-4">
-                                <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-full">
-                                    <span class="material-symbols-outlined text-primary">security</span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-bold">Secure Purchase</span>
-                                    <span class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">SSL encrypted payment</span>
                                 </div>
                             </div>
                         </div>

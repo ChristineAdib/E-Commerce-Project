@@ -37,13 +37,27 @@
                 <span class="material-symbols-outlined text-primary text-3xl">shopping_bag</span>
                 <h1 class="text-xl font-bold">ShopClean</h1>
             </div>
-            <nav class="flex gap-6">
+            <nav class="flex items-center gap-6">
                 <a href="products.html" class="text-primary font-medium">Products</a>
-                <a href="admin.html"
-                    class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Admin</a>
+                <a href="cart.html"
+                    class="relative text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    <span id="cart-badge"
+                        class="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center hidden">0</span>
+                </a>
+                <button onclick="logout()"
+                    class="text-slate-600 dark:text-slate-400 hover:text-red-500 transition-colors font-medium flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                </button>
             </nav>
         </div>
     </header>
+
+    <script>
+        function logout() {
+            sendMessage("LOGOUT", null);
+        }
+    </script>
 
     <main class="max-w-7xl mx-auto px-6 py-12">
         <div class="flex items-center justify-between mb-8">
@@ -51,7 +65,7 @@
             <div
                 class="flex items-center gap-4 bg-white dark:bg-slate-800 p-2 rounded-xl border border-slate-200 dark:border-slate-700">
                 <span class="material-symbols-outlined text-slate-400 pl-2">search</span>
-                <input type="text" placeholder="Search products..."
+                <input type="text" id="search-input" placeholder="Search products..."
                     class="bg-transparent border-none focus:ring-0 text-sm w-48 lg:w-64">
             </div>
         </div>
@@ -72,11 +86,35 @@
             }
         }
 
+        let allProducts = [];
+
         window.onMessageReceived = function (response) {
             if (response.Type === "RECEIVE_ALL_PRODUCTS") {
-                renderProducts(response.Data);
+                allProducts = response.Data;
+                renderProducts(allProducts);
+            } else if (response.Type === "RECEIVE_IMAGE_PATH") {
+                // Not used here but handled for consistency
             }
         };
+
+        window.receiveCart = function (cart) {
+            const badge = document.getElementById('cart-badge');
+            if (cart.totalQuantity > 0) {
+                badge.textContent = cart.totalQuantity;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        };
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allProducts.filter(p =>
+                p.ProductName.toLowerCase().includes(term) ||
+                (p.CategoryName && p.CategoryName.toLowerCase().includes(term))
+            );
+            renderProducts(filtered);
+        });
 
         function renderProducts(products) {
             const grid = document.getElementById('product-grid');
@@ -117,6 +155,7 @@
             // Small delay to ensure WebView2 is ready to receive
             setTimeout(() => {
                 sendMessage("GET_ALL_PRODUCTS", null);
+                sendMessage("GET_CART", null);
             }, 100);
         });
     </script>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Checkout</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: { extend: { colors: { "primary": "#195de6", "background-light": "#f6f6f8" } } }
+        }
+    </script>
+</head>
+
+<body class="bg-background-light font-display text-slate-900 antialiased">
+    <div class="flex min-h-screen flex-col">
+        <header class="border-b bg-white px-10 py-3 shadow-sm flex items-center justify-between">
+            <a href="products.html" class="flex items-center gap-4 text-xl font-bold">
+                <span class="material-symbols-outlined text-primary">shopping_bag</span> ShopEasy
+            </a>
+            <button onclick="sendMessage('LOGOUT', null)"
+                class="text-slate-600 hover:text-red-500 transition-colors font-medium flex items-center gap-1">
+                <span class="material-symbols-outlined text-[20px]">logout</span>
+                <span>Logout</span>
+            </button>
+        </header>
+
+        <main class="mx-auto w-full max-w-[1200px] px-10 py-8 flex-1">
+            <h1 class="text-3xl font-bold mb-8">Checkout</h1>
+            <div id="checkout-container" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Left: Shipping Form (Visual) -->
+                <div class="lg:col-span-7 space-y-8">
+                    <section class="bg-white p-8 rounded-xl shadow-sm border">
+                        <h2 class="text-xl font-bold mb-6">Shipping Details</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input id="firstName" class="rounded-lg border p-3" placeholder="First Name" type="text"
+                                required />
+                            <input id="lastName" class="rounded-lg border p-3" placeholder="Last Name" type="text"
+                                required />
+                            <input id="address" class="col-span-2 rounded-lg border p-3" placeholder="Shipping Address"
+                                type="text" required />
+                            <input id="city" class="rounded-lg border p-3" placeholder="City" type="text" required />
+                            <input id="zipCode" class="rounded-lg border p-3" placeholder="ZIP Code" type="text"
+                                required />
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right: Order Summary -->
+                <div class="lg:col-span-5">
+                    <div class="bg-white p-8 rounded-xl shadow-sm border sticky top-24">
+                        <h2 class="text-xl font-bold mb-6">Order Summary</h2>
+                        <div id="summary-items" class="space-y-4 mb-6">
+                            <!-- Items populated by JS -->
+                        </div>
+                        <div class="border-t pt-4 space-y-2">
+                            <div class="flex justify-between text-sm"><span>Subtotal</span><span
+                                    id="subtotal-val">$0.00</span></div>
+                            <div class="flex justify-between text-sm"><span>Shipping</span><span
+                                    class="text-green-600">FREE</span></div>
+                            <div class="flex justify-between text-lg font-bold pt-4"><span>Total</span><span
+                                    id="total-val" class="text-primary">$0.00</span></div>
+                        </div>
+                        <button onclick="placeOrder()"
+                            class="w-full mt-8 bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all">
+                            Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success State (Hidden by default) -->
+            <div id="success-state" class="hidden text-center py-20">
+                <span class="material-symbols-outlined text-green-500 text-7xl mb-4">check_circle</span>
+                <h2 class="text-3xl font-bold mb-2">Order Confirmed!</h2>
+                <p class="text-slate-500 mb-8">Thank you for your purchase. Your order is on its way.</p>
+                <a href="products.html" class="bg-primary text-white px-8 py-3 rounded-xl font-bold">Back to Store</a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentCart = null;
+
+        function sendMessage(type, data) {
+            if (window.chrome && window.chrome.webview) {
+                window.chrome.webview.postMessage({ Type: type, Data: data });
+            }
+        }
+
+        window.onMessageReceived = function (response) {
+            if (response.Type === "ERROR") {
+                showToast(response.Data.Message, "error");
+            }
+        };
+
+        window.receiveCart = function (cart) {
+            currentCart = cart;
+            const container = document.getElementById('summary-items');
+            const subtotalEl = document.getElementById('subtotal-val');
+            const totalEl = document.getElementById('total-val');
+
+            if (!cart.items || cart.items.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-sm text-center py-4">Your cart is empty</p>';
+                subtotalEl.textContent = '$0.00';
+                totalEl.textContent = '$0.00';
+                return;
+            }
+
+            subtotalEl.textContent = `$${cart.totalPrice.toFixed(2)}`;
+            totalEl.textContent = `$${cart.totalPrice.toFixed(2)}`;
+
+            container.innerHTML = cart.items.map(item => `
+                <div class="flex justify-between gap-4">
+                    <div class="flex gap-4">
+                        <div class="size-12 border rounded bg-slate-50 overflow-hidden">
+                            <img src="${item.imageUrl || 'https://via.placeholder.com/150'}" class="h-full w-full object-cover">
+                        </div>
+                        <div>
+                            <p class="font-medium text-sm line-clamp-1">${item.name}</p>
+                            <p class="text-xs text-slate-500">Qty: ${item.quantity}</p>
+                        </div>
+                    </div>
+                    <p class="font-semibold text-sm">$${item.subtotal.toFixed(2)}</p>
+                </div>
+            `).join('');
+        }
+
+        function placeOrder() {
+            if (!currentCart || !currentCart.items || currentCart.items.length === 0) {
+                showToast("Cannot place order with an empty cart.", "error");
+                return;
+            }
+
+            const fields = [
+                { id: 'firstName', label: 'First Name' },
+                { id: 'lastName', label: 'Last Name' },
+                { id: 'address', label: 'Shipping Address' },
+                { id: 'city', label: 'City' },
+                { id: 'zipCode', label: 'ZIP Code' }
+            ];
+
+            for (const field of fields) {
+                const value = document.getElementById(field.id).value.trim();
+                if (!value) {
+                    showToast(`Please enter your ${field.label}.`, "error");
+                    document.getElementById(field.id).focus();
+                    return;
+                }
+            }
+
+            sendMessage("PLACE_ORDER", null);
+            document.getElementById('checkout-container').classList.add('hidden');
+            document.getElementById('success-state').classList.remove('hidden');
+        }
+
+        function showToast(message, type = "success") {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-8 right-8 px-6 py-4 rounded-2xl shadow-2xl transition-all transform translate-y-20 z-[100] font-bold text-sm ${type === 'error' ? 'bg-red-500 text-white' : 'bg-green-600 text-white'
+                }`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-20'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-20');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => { sendMessage("GET_CART", null); }, 100);
+        });
+    </script>
+</body>
+
+</html>

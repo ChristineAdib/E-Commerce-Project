@@ -39,10 +39,15 @@
                 </div>
                 <h1 id="form-title" class="text-xl font-bold tracking-tight">Add New Product</h1>
             </div>
-            <nav class="flex gap-8">
+            <nav class="flex gap-8 items-center">
                 <a href="admin.html"
                     class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors font-semibold text-sm uppercase tracking-wider">Back
                     to List</a>
+                <button onclick="sendMessage('LOGOUT', null)"
+                    class="text-slate-500 dark:text-slate-400 hover:text-red-500 transition-colors font-semibold text-sm uppercase tracking-wider flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                    Logout
+                </button>
             </nav>
         </div>
     </header>
