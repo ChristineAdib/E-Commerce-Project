@@ -39,14 +39,23 @@
             </div>
             <nav class="flex items-center gap-6">
                 <a href="products.html" class="text-primary font-medium">Products</a>
+
+                <a href="orders.html"
+                   class="text-slate-600 dark:text-slate-400 hover:text-primary transition-colors font-medium">
+                    My Orders
+                </a>
+
                 <a href="cart.html"
-                    class="relative text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+                   class="relative text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
                     <span class="material-symbols-outlined">shopping_cart</span>
                     <span id="cart-badge"
-                        class="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center hidden">0</span>
+                          class="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center hidden">
+                        0
+                    </span>
                 </a>
+
                 <button onclick="logout()"
-                    class="text-slate-600 dark:text-slate-400 hover:text-red-500 transition-colors font-medium flex items-center gap-1">
+                        class="text-slate-600 dark:text-slate-400 hover:text-red-500 transition-colors font-medium flex items-center gap-1">
                     <span class="material-symbols-outlined text-[20px]">logout</span>
                 </button>
             </nav>
