@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Application.DTOs.CategoryDTOs
 {
-    internal class GetCategoryDto
+    public class GetCategoryDto
     {
+        public string CategoryName { get; set; }
+        public string Description { get; set; }
     }
 }
