@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Application.DTOs.CategoryDTOs
 {
-    internal class UpdateCategoryDto
+    public class UpdateCategoryDto
     {
+        public int Id { get; set; }
+        public string CategoryName { get; set; }
     }
 }

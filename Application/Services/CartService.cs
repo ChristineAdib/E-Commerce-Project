@@ -109,9 +109,12 @@ namespace Application.Services
                 return;
             }
 
-            var product = await _productRepo.get(productId);
+            var product = await _productRepo.GetByIdAsync(productId);
 
-            if (quantity > product.Stock)
+            if (product == null)
+                throw new Exception("Product not found");
+
+            if (quantity > product.StockQuantity)
                 throw new Exception("Quantity exceeds stock");
 
             item.Quantity = quantity;

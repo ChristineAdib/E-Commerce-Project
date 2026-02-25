@@ -15,5 +15,7 @@ namespace Application.DTOs.ProductDTOs
         public string ImageUrl { get; set; }
 
         public int CategoryID { get; set; }
+        public string Description { get; set; }
+        public int StockQuantity { get; set; }
     }
 }
