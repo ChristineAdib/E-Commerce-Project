@@ -17,9 +17,21 @@ namespace Application.Services
             _categoryRepository = categoryRepository;
         }
 
-        public List<Category> GetAll()
+        public List<GetCategoryDto> GetAll()
         {
-            return _categoryRepository.Get_all_category().ToList();
+            var cate= _categoryRepository.Get_all_category().ToList();
+            var dto = new List<GetCategoryDto>();
+            foreach(var c in cate)
+            {
+                var category = new GetCategoryDto()
+                {
+                    CategoryName = c.CategoryName,
+                    Description=c.CategoryDescription
+                };
+                dto.Add(category);
+            }
+
+            return dto;
         }
 
         public void AddCategory(CreateCategoryDto category)
@@ -80,7 +92,7 @@ namespace Application.Services
                 throw new Exception("Category not found.");
             }
 
-
+            
 
             _categoryRepository.Delete_Category(category);
         }

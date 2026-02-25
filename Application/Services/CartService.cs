@@ -135,7 +135,7 @@ namespace Application.Services
 
         private async Task ValidateUser(int userId)
         {
-            var user = _userRepo.GetUserById(userId);
+            var user =await _userRepo.GetUserByIdAsync(userId);
 
             if (user == null)
                 throw new Exception("User not found");
