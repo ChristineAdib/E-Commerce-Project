@@ -27,13 +27,30 @@ namespace Application.Services
         }
         public async Task AddToCartAsync(int userId, int productId, int quantity)
         {
+            await ValidateUser(userId);
+
             if (quantity <= 0)
-            {
-                Console.WriteLine("Quantity must be greater than zero");
-            }
+                throw new Exception("Quantity must be greater than zero");
+
+            var product = await _productRepo.GetByIdAsync(userId);
+            if (product == null)
+                throw new Exception("Product not found");
+
+            if (product.StockQuantity <= 0)
+                throw new Exception("Product out of stock");
 
             var cart = await _cartRepo.GetCartByUserIdAsync(userId);
+            if (cart == null)
+                throw new Exception("Cart not found");
+
             var existingItem = await _cartItemRepo.GetByCartAndProductAsync(cart.Id, productId);
+            int total = quantity;
+
+            if (existingItem is not null)
+                total += existingItem.Quantity;
+
+            if(total>product.StockQuantity)
+                throw new Exception("Requested quantity exceeds available stock");
 
             if (existingItem != null)
             {
@@ -64,13 +81,11 @@ namespace Application.Services
 
         public async Task<CartDto> GetCartAsync(int userId)
         {
+            await ValidateUser(userId);
             var cart = await _cartRepo.GetCartByUserIdAsync(userId);
 
             if (cart is null)
-            {
-                Console.WriteLine("Cart Not Found");
-                return null;
-            }
+                throw new Exception("Cart not found");
 
             return cart.Adapt<CartDto>();
         }
@@ -123,7 +138,7 @@ namespace Application.Services
 
         private async Task ValidateUser(int userId)
         {
-            var user = _userRepo.GetUserById(userId);
+            var user =await _userRepo.GetUserByIdAsync(userId);
 
             if (user == null)
                 throw new Exception("User not found");

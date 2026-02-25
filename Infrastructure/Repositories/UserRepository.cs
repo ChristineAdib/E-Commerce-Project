@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Repository.User_Repo;
 using Domain.Entities;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,10 +15,10 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public void Add(User user)
+        public async Task AddAsync(User user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
         }
 
         public void Delete(int id)
@@ -30,29 +31,29 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsersAsync()
         {
-            return  _context.Users.Where(u => u.IsAdmin == false).ToList();
+            return await _context.Users.Where(u => u.IsAdmin == false).ToListAsync();
         }
 
-        public User GetUserByEmail(string Email)
+        public async Task<User> GetUserByEmailAsync(string Email)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == Email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
         }
 
-        public User GetUserById(int id)
+        public async Task<User> GetUserByIdAsync(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.Id == id);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public User GetUserByUsername(string username)
+        public async Task<User> GetUserByUsernameAsync(string username)
         {
-            return _context.Users.FirstOrDefault(u => u.UserName == username);
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
         }
 
-        public User Login(string username, string password)
+        public async Task<User> Login(string username, string password)
         {
-            return _context.Users.FirstOrDefault(u => u.UserName == username && u.Password == password);
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
         }
 
         public void Update(User user)

@@ -21,9 +21,9 @@ namespace Application.Services
             _cartRepo = cartRepository;
         }
 
-        public void Delete(int id)
+        public async void Delete(int id)
         {
-            var user = _userRepository.GetUserById(id);
+            var user = await _userRepository.GetUserByIdAsync(id);
             if (user == null)
                 Console.WriteLine("This user not found.");
             _userRepository.Delete(id);
@@ -31,9 +31,9 @@ namespace Application.Services
         }
 
         //for admin
-        public List<GetUserDto> GetAllUsers()
+        public async Task<List<GetUserDto>> GetAllUsersAsync()
         {
-            List<User> users = _userRepository.GetAllUsers();
+            List<User> users =await _userRepository.GetAllUsersAsync();
             List<GetUserDto> userDtos = new();
             foreach(var u in users)
             {
@@ -47,9 +47,9 @@ namespace Application.Services
             return userDtos;
         }
 
-        public GetUserDto GetUserByEmail(string Email)
+        public async Task<GetUserDto> GetUserByEmailAsync(string Email)
         {
-            var user = _userRepository.GetUserByEmail(Email);
+            var user =await _userRepository.GetUserByEmailAsync(Email);
             if (user == null)
                 return null;
 
@@ -57,9 +57,9 @@ namespace Application.Services
             return userDto;
         }
 
-        public GetUserDto GetUserById(int id)
+        public async Task<GetUserDto> GetUserByIdAsync(int id)
         {
-            var user = _userRepository.GetUserById(id);
+            var user =await _userRepository.GetUserByIdAsync(id);
             if (user == null)
                 return null;
 
@@ -67,9 +67,9 @@ namespace Application.Services
             return userDto;
         }
 
-        public GetUserDto Login(string username, string password)
+        public async Task<GetUserDto> Login(string username, string password)
         {
-            var user = _userRepository.GetUserByUsername(username);
+            var user =await _userRepository.GetUserByUsernameAsync(username);
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 Console.WriteLine($"username and password is required");
@@ -88,7 +88,7 @@ namespace Application.Services
             return userDto;
         }
 
-        public void Register(AddUserDto user)
+        public async Task Register(AddUserDto user)
         {
             var u = new User
             {
@@ -98,15 +98,15 @@ namespace Application.Services
                 IsAdmin = false
             };
 
-             _userRepository.Add(u);
+             await _userRepository.AddAsync(u);
 
             var cart = new Cart { UserId = u.Id };
-             _cartRepo.AddAsync(cart);
+             await _cartRepo.AddAsync(cart);
         }
 
-        public void Update(UpdataUserDto userdto)
+        public async void Update(UpdataUserDto userdto)
         {
-            var existing = _userRepository.GetUserById(userdto.Id);
+            var existing =await _userRepository.GetUserByIdAsync(userdto.Id);
             if (existing == null)
                 Console.WriteLine("This user not found.");
 
