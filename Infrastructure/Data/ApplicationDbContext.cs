@@ -18,7 +18,7 @@ namespace Infrastructure.Data
         public DbSet<CartItem> CartItems { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source = .; Initial Catalog = ECommerceDb; Integrated Security = True; Encrypt = False;");
+            optionsBuilder.UseSqlServer("Server=ENGKHALED;Database=ECommerceDb;Trusted_Connection=True;TrustServerCertificate=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
