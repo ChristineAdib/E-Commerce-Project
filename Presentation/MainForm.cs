@@ -1,25 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.WinForms;
-using Application.Services;
+﻿using Application.DTOs.OrderDTOs;
 using Application.DTOs.ProductDTOs;
-using Infrastructure.Data;
-using Infrastructure.Repositories;
-using System.Text.Json;
-using System.IO;
-using Domain.Entities;
-using Application.Interfaces.Services.Category_servises;
-using Application.Interfaces.Repository.Ctegory_Repo;
-using Application.Interfaces.Services.Cart_services;
+using Application.DTOs.UserDTOs;
 using Application.Interfaces.Repository.Cart_Repo;
+using Application.Interfaces.Repository.Ctegory_Repo;
 using Application.Interfaces.Repository.Product_Repo;
 using Application.Interfaces.Repository.User_Repo;
+using Application.Interfaces.Services.Cart_services;
+using Application.Interfaces.Services.Category_servises;
+using Application.Interfaces.Services.Order_servises;
 using Application.Interfaces.Services.User_services;
-using Application.DTOs.UserDTOs;
+using Application.Services;
+using Domain.Entities;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.WinForms;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Presentation
 {
@@ -31,6 +33,7 @@ namespace Presentation
         private readonly ICartRepository _cartRepo;
         private readonly IUserServices _userService;
         private readonly ICartServices _cartService;
+        private readonly IOrderService _orderService;
         private bool _isNavigationComplete = false;
         
         // Session Management
@@ -53,6 +56,8 @@ namespace Presentation
             var cartItemRepo = new Infrastructure.Repositories.CartItemRepository(context);
             var userRepo = new Infrastructure.Repositories.UserRepository(context);
             _cartService = new CartService(_cartRepo, cartItemRepo, userRepo, repo);
+            var orderRepo = new Infrastructure.Repositories.OrderRepository(context);
+            _orderService = new OrderService(orderRepo, repo);
             _userService = new UserService(userRepo, _cartRepo);
 
             InitializeWebView();
@@ -139,6 +144,28 @@ namespace Presentation
                             }
                         }
                         break;
+                    case "PLACE_ORDER":
+                        if (_currentUserId == null || _isAdmin) return;
+
+                        var cart = await _cartRepo.GetCartByUserIdAsync(_currentUserId.Value);
+                        if (cart == null || cart.CartItems == null || !cart.CartItems.Any()) return;
+
+                        var createOrderDto = new CreateOrderDto
+                        {
+                            UserId = _currentUserId.Value,
+                            Items = cart.CartItems.Select(ci => new CreateOrderItemDto
+                            {
+                                ProductId = ci.ProductId,
+                                Quantity = ci.Quantity
+                            }).ToList()
+                        };
+
+                        await _orderService.CreateOrderAsync(createOrderDto);
+
+                        await _cartService.ClearCartAsync(_currentUserId.Value);
+                        await SendUpdatedCartToFrontend();
+
+                        break;
 
                     case "UPDATE_PRODUCT":
                         if (message.Data is JsonElement updateEl)
@@ -158,6 +185,12 @@ namespace Presentation
                         {
                             SendToJS("RECEIVE_IMAGE_PATH", new { Path = relativePath });
                         }
+                        break;
+                    case "GET_USER_ORDERS":
+                        if (_currentUserId == null) return;
+
+                        var orders = await _orderService.GetOrdersByUserAsync(_currentUserId.Value);
+                        SendToJS("RECEIVE_USER_ORDERS", orders);
                         break;
 
                     case "GET_ALL_CATEGORIES":
@@ -205,11 +238,7 @@ namespace Presentation
                         }
                         break;
 
-                    case "PLACE_ORDER":
-                        if (_currentUserId == null || _isAdmin) return;
-                        await _cartService.ClearCartAsync(_currentUserId.Value);
-                        await SendUpdatedCartToFrontend();
-                        break;
+                
 
                     case "LOGIN":
                         if (message.Data is JsonElement loginEl)

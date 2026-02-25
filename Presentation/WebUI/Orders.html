@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShopClean - My Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <header class="bg-white shadow p-4 flex justify-between">
+        <h1 class="text-xl font-bold">My Orders</h1>
+        <a href="products.html" class="text-blue-600 font-medium">Back To Products</a>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-6">
+
+        <div id="orders-container">
+            <!-- Loading -->
+            <div class="text-center py-20 text-gray-500">
+                Loading orders...
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+
+function sendMessage(type, data) {
+    if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage({ Type: type, Data: data });
+    }
+}
+
+let allOrders = [];
+
+window.onMessageReceived = function (response) {
+
+    if (response.Type === "RECEIVE_USER_ORDERS") {
+        allOrders = response.Data;
+        renderOrders(allOrders);
+    }
+
+};
+
+function renderOrders(orders) {
+
+    const container = document.getElementById("orders-container");
+
+    if (!orders || orders.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-20 text-gray-500">
+                No orders found.
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = orders.map(order => `
+
+        <div class="bg-white rounded-xl shadow p-6 mb-6">
+
+            <div class="flex justify-between mb-4">
+                <div>
+                    <h2 class="font-bold text-lg">Order #${order.Id}</h2>
+                    <p class="text-sm text-gray-500">
+                        ${new Date(order.OrderDate).toLocaleString()}
+                    </p>
+                </div>
+
+                <div class="text-right">
+                    <p class="font-semibold text-blue-600">
+                        ${order.Status}
+                    </p>
+                    <p class="text-lg font-bold">
+                        $${order.TotalAmount.toFixed(2)}
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t pt-4">
+                ${order.Items.map(item => `
+                    <div class="flex justify-between text-sm mb-2">
+                        <span>
+                            Product Id: ${item.ProductId}
+                            (Qty: ${item.Quantity})
+                        </span>
+                        <span>
+                            $${item.SubTotal.toFixed(2)}
+                        </span>
+                    </div>
+                `).join('')}
+            </div>
+
+        </div>
+
+    `).join('');
+}
+
+
+// Request orders on load
+window.addEventListener("DOMContentLoaded", () => {
+
+    setTimeout(() => {
+        sendMessage("GET_USER_ORDERS", null);
+    }, 100);
+
+});
+
+    </script>
+
+</body>
+</html>
