@@ -23,6 +23,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Application.DTOs.UserDTOs;
+using Application.DTOs.CategoryDTOs;
+
+
 namespace Presentation
 {
     public partial class MainForm : Form
@@ -195,10 +199,62 @@ namespace Presentation
 
                     case "GET_ALL_CATEGORIES":
                         if (!_isNavigationComplete) return;
-                        var categories = _categoryService.GetAll();
-                        var categoryList = categories.Select(c => new { id = c.Id, name = c.CategoryName }).ToList();
-                        string categoriesJson = JsonSerializer.Serialize(categoryList);
-                        webView.CoreWebView2.ExecuteScriptAsync($"window.receiveCategories && window.receiveCategories({categoriesJson});");
+                        var categoriesList = _categoryService.GetAll();
+                        SendToJS("RECEIVE_ALL_CATEGORIES", categoriesList);
+                        break;
+
+                    case "CREATE_CATEGORY":
+                        if (message.Data is JsonElement categoryCreateEl)
+                        {
+                            var createCatDto = JsonSerializer.Deserialize<CreateCategoryDto>(categoryCreateEl.GetRawText(), jsonOptions);
+                            if (createCatDto != null)
+                            {
+                                try {
+                                    _categoryService.AddCategory(createCatDto);
+                                    SendToJS("CATEGORY_CREATED", new { Success = true });
+                                } catch (Exception ex) {
+                                    SendToJS("ERROR", new { Message = ex.Message });
+                                }
+                            }
+                        }
+                        break;
+
+                    case "UPDATE_CATEGORY":
+                        if (message.Data is JsonElement categoryUpdateEl)
+                        {
+                            var updateCatDto = JsonSerializer.Deserialize<UpdateCategoryDto>(categoryUpdateEl.GetRawText(), jsonOptions);
+                            if (updateCatDto != null)
+                            {
+                                try {
+                                    _categoryService.UpdateCategory(updateCatDto);
+                                    SendToJS("CATEGORY_UPDATED", new { Success = true });
+                                } catch (Exception ex) {
+                                    SendToJS("ERROR", new { Message = ex.Message });
+                                }
+                            }
+                        }
+                        break;
+
+                    case "DELETE_CATEGORY":
+                        if (message.Data is JsonElement categoryDelEl)
+                        {
+                            try {
+                                int catId = int.Parse(categoryDelEl.ToString());
+                                _categoryService.DeleteCategory(catId);
+                                SendToJS("CATEGORY_DELETED", new { Success = true, Id = catId });
+                            } catch (Exception ex) {
+                                SendToJS("ERROR", new { Message = ex.Message });
+                            }
+                        }
+                        break;
+                    
+                    case "GET_CATEGORY_DETAILS":
+                        if (message.Data is JsonElement catIdEl)
+                        {
+                            int catId = int.Parse(catIdEl.ToString());
+                            var cat = _categoryService.GetAll().FirstOrDefault(c => c.Id == catId);
+                            SendToJS("RECEIVE_CATEGORY_DETAILS", cat);
+                        }
                         break;
 
                     case "GET_CART":

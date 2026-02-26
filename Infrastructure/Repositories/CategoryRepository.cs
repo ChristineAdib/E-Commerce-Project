@@ -22,8 +22,7 @@ namespace Infrastructure.Repositories
 
         public IQueryable<Category> Get_all_category()
         {
-            return _context.Categories;
-
+            return _context.Categories.Include(c => c.Products);
         }
         public void add_Category(Category catgory)
         {

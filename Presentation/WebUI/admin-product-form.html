@@ -180,9 +180,10 @@
 
         window.onMessageReceived = function (response) {
             if (response.Type === "RECEIVE_PRODUCT_DETAILS") {
-                // Store product temporarily if categories aren't loaded yet
                 window.pendingProduct = response.Data;
                 populateForm(response.Data);
+            } else if (response.Type === "RECEIVE_ALL_CATEGORIES") {
+                receiveCategories(response.Data);
             } else if (response.Type === "RECEIVE_IMAGE_PATH") {
                 imageUrlInput.value = response.Data.Path;
                 updateImagePreview(response.Data.Path);
@@ -218,20 +219,20 @@
             }
         }
 
-        window.receiveCategories = function (categories) {
+        function receiveCategories(categories) {
             const select = document.getElementById("CategoryID");
             select.innerHTML = '<option value="" disabled selected>Select Category</option>';
             categories.forEach(c => {
                 const option = document.createElement("option");
-                option.value = c.id;
-                option.textContent = c.name;
+                option.value = c.Id;
+                option.textContent = c.CategoryName;
                 select.appendChild(option);
             });
             window.categoriesLoaded = true;
             if (window.pendingProduct) {
                 populateForm(window.pendingProduct);
             }
-        };
+        }
 
         imageUrlInput.addEventListener('input', (e) => {
             updateImagePreview(e.target.value);
@@ -268,7 +269,7 @@
                     sendMessage("GET_PRODUCT_DETAILS", parseInt(id));
                 }, 100);
             }
-            window.chrome.webview.postMessage({ type: "GET_ALL_CATEGORIES" });
+            sendMessage("GET_ALL_CATEGORIES", null);
         });
     </script>
 </body>
