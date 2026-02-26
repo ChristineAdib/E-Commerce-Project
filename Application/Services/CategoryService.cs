@@ -19,15 +19,16 @@ namespace Application.Services
 
         public List<GetCategoryDto> GetAll()
         {
-            var cate= _categoryRepository.Get_all_category().ToList();
+            var cate = _categoryRepository.Get_all_category().ToList();
             var dto = new List<GetCategoryDto>();
-            foreach(var c in cate)
+            foreach (var c in cate)
             {
                 var category = new GetCategoryDto()
                 {
                     Id = c.Id,
                     CategoryName = c.CategoryName,
-                    Description=c.CategoryDescription
+                    Description = c.CategoryDescription,
+                    ProductCount = c.Products?.Count ?? 0
                 };
                 dto.Add(category);
             }
@@ -39,7 +40,7 @@ namespace Application.Services
         {
             if (string.IsNullOrWhiteSpace(category.Name))
             {
-                throw new Exception("Category name cannot be empty.........");
+                throw new Exception("Category name cannot be empty.");
             }
 
             var isExist = _categoryRepository.Get_all_category()
@@ -50,19 +51,21 @@ namespace Application.Services
                 throw new Exception("Category name already exists.");
             }
 
-            var newcategory = category.Adapt<Category>();
+            var newcategory = new Category
+            {
+                CategoryName = category.Name,
+                CategoryDescription = category.Description
+            };
 
             _categoryRepository.add_Category(newcategory);
         }
 
         public void UpdateCategory(UpdateCategoryDto category)
         {
-
             if (category == null || category.Id <= 0)
             {
                 throw new Exception("Invalid category data!!");
             }
-
 
             if (string.IsNullOrWhiteSpace(category.CategoryName))
             {
@@ -78,8 +81,16 @@ namespace Application.Services
                 throw new Exception("Another category is already using this name.");
             }
 
-            var categoryEntity = category.Adapt<Category>();
-            _categoryRepository.Update_Category(categoryEntity);
+            var existing = _categoryRepository.Get_all_category()
+                .FirstOrDefault(c => c.Id == category.Id);
+
+            if (existing == null)
+                throw new Exception("Category not found");
+
+            existing.CategoryName = category.CategoryName;
+            existing.CategoryDescription = category.Description;
+
+            _categoryRepository.Update_Category(existing);
         }
 
         public void DeleteCategory(int id)
